@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Use correct character set. -->
+    <meta charset="utf-8" />
+    <!-- Tell IE to use the latest, best version. -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <title>practice Cesium!</title>
+    <script src="./js/Cesium/Cesium.js"></script>
+    <style>
+      @import url(./js/Cesium/Widgets/widgets.css);
+      html,
+      body,
+      #cesiumContainer {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="cesiumContainer"></div>
+    <script>
+      // var viewer = new Cesium.Viewer("cesiumContainer",{
+      //   terrainProvider: Cesium.createWorldTerrain(),
+      // });
+      var viewer = new Cesium.Viewer("cesiumContainer");
+
+      //標高　アクセスできない^^;
+      // var viewer = new Cesium.Viewer('cesiumContainer');
+      //   viewer.scene.globe.enableLighting = true;
+      //   viewer.terrainProvider = new Cesium.CesiumTerrainProvider({
+      //       url : '//assets.agi.com/terrain/v1/tilesets/world/tiles',
+      //       requestVertexNormals : true
+      //   });
+
+      // var terrainProvider = new Cesium.CesiumTerrainProvider({
+      //   url:'//assets.agi.com/stk-terrain/world',
+      //   requestVertexNormals:true
+      // });
+      // viewer.terrainProvider = terrainProvider;
+      // viewer.scene.globe.enableLighting = true;
+      // });
+
+      // var czml = [
+      //   {
+      //     id: "document",
+      //     name: "Polygon",
+      //     version: "1.0",
+      //   },
+      //   {
+      //     id: "Polygon",
+      //     name: "polygon",
+      //     polygon: {
+      //       positions: {
+      //         cartographicDegrees: [
+      //           139.732036045,35.618979964,0,
+      //           139.732036045,35.705328335,0,
+      //           139.815044226,35.705328335,0,
+      //           139.815044226,35.618979964,0
+      //         ],
+      //       },
+      //       material: {
+      //         solidColor: {
+      //           color: {
+      //             rgba: [65, 125, 190, 90],
+      //           },
+      //         },
+      //       },
+      //       extrudedHeight: 156.20,
+      //       closeTop: true,
+      //       closeBottom: true,
+      //     },
+      //   },
+      // ];
+
+      // 地理院タイル
+      // var image = new Cesium.UrlTemplateImageryProvider({
+      //   url:'//cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',
+      //   // url:'./tes/{z}/{x}/{y}.png',
+      //   // maximumLevel:10
+      // });
+      // var current_image = viewer.scene.imageryLayers.addImageryProvider(image);
+
+      // radar tile
+      var image2 = new Cesium.UrlTemplateImageryProvider({
+        // url:'./target_dir3/{z}/{x}/{y}.png',
+        url:'./2dtile/rdr/{z}/{x}/{y}.png',
+      });
+      var current_image = viewer.scene.imageryLayers.addImageryProvider(image2);
+      current_image.alpha = 0.5;
+
+      // plateau 3dtile
+      var tileset = viewer.scene.primitives.add(new Cesium.Cesium3DTileset({
+        url:'./3dtile/13107_sumida-ku/tileset.json',
+      }));
+      viewer.zoomTo(tileset);
+
+
+            // カメラ指定
+      // viewer.camera.flyTo({
+      //   destination:Cesium.Cartesian3.fromDegrees(141.3860555,43.056222,1000000)
+      // });
+      // geojson表示
+      var japan = viewer.dataSources.add(Cesium.GeoJsonDataSource.load('./json/japan_ver821.geojson',{
+        stroke:Cesium.Color.BLUE,
+        fill:Cesium.Color.YELLOW.withAlpha(0),
+        strokeWidth:5
+      }))
+      // ポリゴン表示
+      // var shikaku = viewer.entities.add({
+      //   name:'shikaku',
+      //   polygon:{
+      //     hierarchy:Cesium.Cartesian3.fromDegreesArray([
+      //       141.3860555,43.056222,
+      //       141.3870555,43.056222,
+      //       141.3870555,43.066222,
+      //       141.3860555,43.066222
+      //     ]),
+      //     material:Cesium.Color.RED.withAlpha(0.5),
+      //   }
+      // });
+      // viewer.zoomTo(shikaku);//個別で指定
+      // box
+      // var blueBox = viewer.entities.add({
+      //   name:'Bluebox',
+      //   position:Cesium.Cartesian3.fromDegrees(141.3860555,43.056222,0),
+      //   box:{
+      //     dimensions:new Cesium.Cartesian3(10.0,10.0,10.0),
+      //     material:Cesium.Color.BLUE
+      //   }
+      // });
+      // viewer.zoomTo(blueBox);
+      // viewer.zoomTo(viewer.entities);//複数指定
+
+
+      // var animation =
+      //   [{
+      //     "id" : "document",
+      //     "name" : "name",
+      //     "version" : "1.0"
+      //   },{
+      //     "id" : "1",
+      //     "name" : "animation",
+      //     "description" : "動きます",
+      //     "availability":"2018-03-13T12:00:00Z/2018-03-13T12:01:00Z",
+      //     "billboard" : {
+      //       "image" : "test.png",
+      //       "scale" : 0.3
+      //     },
+      //     "position" : {
+      //       "epoch":"2018-03-13T12:00:00Z",
+      //       "cartographicDegrees": [0,139,35,100,
+      //                               5,141.064,38.366,0,
+      //                               6,140.94532,38.337405,0,
+      //                               7,141.061363,38.238789,0,
+      //                               8,141.215858,38.341713,0,
+      //                               9,141.099129,38.439652,0,
+      //                               10,140.94532,38.337405,0,
+      //                               15,135.190,35.567,0,
+      //                               16,135.14831542968753,35.58920198716242,0, 17,135.14488220214847,35.54619518601583,0, 18,135.20942687988284,35.544519165584674,0, 19,135.21080017089847,35.586968406786504,0, 20,135.14831542968753,35.58920198716242,0,
+      //                               25,132.318,34.297,0,
+      //                               26,132.24929809570315,34.31650345811414,0, 27,132.24826812744143,34.225704902867896,0, 28,132.38250732421878,34.22769216967081,0, 29,132.38216400146487,34.31650194389378,0,
+      //                               30,132.24929809570315,34.31650345811414,0
+      //                             ]
+      //     }
+      //   }
+      //   ];
+      // viewer.dataSources.add(Cesium.CzmlDataSource.load(animation));
+
+
+    </script>
+  </body>
+</html>
